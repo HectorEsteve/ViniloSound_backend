@@ -5,15 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Format;
 
-class FormatController extends Controller
-{
-    // Mostrar todos los formatos
+class FormatController extends Controller{
     public function index(){
         $formats = Format::all();
         return response()->json($formats);
     }
 
-    // Mostrar un formato específico
     public function show($id){
         $format = Format::find($id);
         if (!$format) {
@@ -22,7 +19,6 @@ class FormatController extends Controller
         return response()->json($format);
     }
 
-    // Crear un nuevo formato
     public function store(Request $request){
         $format = new Format();
         $format->fill($request->all());
@@ -30,7 +26,6 @@ class FormatController extends Controller
         return response()->json($format, 201);
     }
 
-    // Actualizar un formato existente
     public function update(Request $request, $id){
         $format = Format::find($id);
         if (!$format) {
@@ -41,7 +36,6 @@ class FormatController extends Controller
         return response()->json($format);
     }
 
-    // Eliminar un formato existente
     public function destroy($id){
         $format = Format::find($id);
         if (!$format) {

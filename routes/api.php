@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormatController;
+use App\Http\Controllers\RecordCompanyController;
+use App\Http\Controllers\RolController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +27,22 @@ Route::prefix('formats')->group(function () {
     Route::post('/', [FormatController::class, 'store']);
     Route::put('/{id}', [FormatController::class, 'update']);
     Route::delete('/{id}', [FormatController::class, 'destroy']);
+});
+
+Route::prefix('record-companies')->group(function () {
+    Route::get('/', [RecordCompanyController::class, 'index']);
+    Route::get('/{id}', [RecordCompanyController::class, 'show']);
+    Route::post('/', [RecordCompanyController::class, 'store']);
+    Route::put('/{id}', [RecordCompanyController::class, 'update']);
+    Route::delete('/{id}', [RecordCompanyController::class, 'destroy']);
+});
+
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RolController::class, 'index']);
+    Route::get('/users', [RolController::class, 'usersByRol']);
+    Route::get('/users/{id}', [RolController::class, 'usersByRolId']);
+    Route::get('/{id}', [RolController::class, 'show']);
+    Route::post('/', [RolController::class, 'store']);
+    Route::put('/{id}', [RolController::class, 'update']);
+    Route::delete('/{id}', [RolController::class, 'destroy']);
 });
