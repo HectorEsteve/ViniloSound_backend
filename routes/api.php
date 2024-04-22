@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FormatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('formats')->group(function () {
+    Route::get('/', [FormatController::class, 'index']);
+    Route::get('/{id}', [FormatController::class, 'show']);
+    Route::post('/', [FormatController::class, 'store']);
+    Route::put('/{id}', [FormatController::class, 'update']);
+    Route::delete('/{id}', [FormatController::class, 'destroy']);
 });
