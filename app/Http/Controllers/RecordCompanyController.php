@@ -31,4 +31,15 @@ class RecordCompanyController extends Controller{
         RecordCompany::findOrFail($id)->delete();
         return response()->json(null, 204);
     }
+
+    public function vinylsByRecordCompanies(){
+        $recordCompanies = RecordCompany::with('vinyls')->get();
+        return response()->json($recordCompanies);
+    }
+
+    public function vinylsByRecordCompany($id){
+        $recordCompany = RecordCompany::with('vinyls')->findOrFail($id);
+        return response()->json($recordCompany);
+    }
+
 }

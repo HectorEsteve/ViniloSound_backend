@@ -44,4 +44,14 @@ class FormatController extends Controller{
         $format->delete();
         return response()->json(['message' => 'Format deleted']);
     }
+
+    public function vinylsByFormats(){
+        $formats = Format::with('vinyls')->get();
+        return response()->json($formats);
+    }
+
+    public function vinylsByFormat($id){
+        $format = Format::with('vinyls')->findOrFail($id);
+        return response()->json($format);
+    }
 }

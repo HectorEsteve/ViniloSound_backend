@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class DefaultBandVinylSeeder extends Seeder{
     public function run(): void{
+
+        DB::table('band_vinyl')->insert([
+            'vinyl_id' => 1,
+            'band_id' => 1,
+        ]);
+
         $vinyls = Vinyl::where('id', '!=', 1)->get();
         $bands = Band::where('id', '!=', 1)->get();
 
