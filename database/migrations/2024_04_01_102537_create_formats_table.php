@@ -9,7 +9,7 @@ return new class extends Migration{
     public function up():void{
         Schema::create('formats', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->integer('diameter');
             $table->string('rpm');
             $table->integer('duration_side');

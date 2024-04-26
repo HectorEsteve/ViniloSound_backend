@@ -14,6 +14,10 @@ class Vinyl extends Model{
         'publication_year',
         'edition_year',
     ];
+    protected $hidden = [
+        'format_id',
+        'record_company_id'
+    ];
 
     //Recupera las colecciones asociadas al vinilo (relación m:n).
     public function collections(){

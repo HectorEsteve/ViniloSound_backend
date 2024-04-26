@@ -1,45 +1,100 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Band;
 use Illuminate\Http\Request;
 
-class BandController extends Controller
-{
+class BandController extends Controller{
     public function index(){
-        return Band::all();
+        $bands = Band::with(['songs' => function ($query) {
+            $query->with('genre');
+        }])->get();
+
+        $data = [
+            'message' => 'Bands retrieved successfully',
+            'bands' => $bands
+        ];
+        return response()->json($data);
     }
 
     public function store(Request $request){
-        return Band::create($request->all());
+        $request->validate([
+            'name' => 'required|unique:bands',
+            'members_count' => 'required|integer|min:1',
+            'members' => 'nullable',
+            'formation_year' => 'required|digits:4',
+            'country' => 'required|max:255',
+        ]);
+
+        $band = Band::create($request->all());
+        $data =[
+            'message' => 'Band created successfully',
+            'band' => $band
+        ];
+        return response()->json($data);
     }
 
-    public function show($id){
-        return Band::findOrFail($id);
+    public function show($id) {
+        $band = Band::with(['songs' => function ($query) {
+            $query->with('genre');
+        }])->find($id);
+
+        if (!$band) {
+            $data = [
+                'message' => 'Band not found',
+                'band' => null
+            ];
+            return response()->json($data);
+        }
+
+        $data = [
+            'message' => 'Band retrieved successfully',
+            'band' => $band
+        ];
+        return response()->json($data);
     }
 
     public function update(Request $request, $id){
-        $band = Band::findOrFail($id);
+        $band = Band::find($id);
+        if (!$band) {
+            $data = [
+                'message' => 'Band not found',
+                'band' => null
+            ];
+            return response()->json($data);
+        }
+
+        $request->validate([
+            'name' => 'required|unique:bands,name,'.$id,
+            'members_count' => 'required|integer|min:1',
+            'members' => 'nullable|array',
+            'formation_year' => 'required|digits:4',
+            'country' => 'required|max:255',
+        ]);
+
         $band->update($request->all());
-        return $band;
+        $data = [
+            'message' => 'Band updated successfully',
+            'band' => $band
+        ];
+        return response()->json($data);
     }
 
     public function destroy($id){
-        $band = Band::findOrFail($id);
+        $band = Band::find($id);
+        if (!$band) {
+            $data = [
+                'message' => 'Band not found',
+                'band' => null
+            ];
+            return response()->json($data);
+        }
+
         $band->delete();
-        return response()->json(['message' => 'Band deleted successfully'], 200);
+        $data = [
+            'message' => 'Band deleted successfully',
+            'band' => $band
+        ];
+        return response()->json($data);
     }
-
-    public function indexWithDetails(){
-        $bands = Band::with('songs.vinyls')->get();
-        return $bands;
-    }
-
-    public function showWithDetails($id){
-        $band = Band::findOrFail($id);
-        $songs = $band->songs()->with('vinyls')->get();
-        return $songs;
-    }
-
 }

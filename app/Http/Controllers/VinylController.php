@@ -7,62 +7,96 @@ use App\Models\Vinyl;
 
 class VinylController extends Controller{
     public function index(){
-        $vinyls = Vinyl::all();
-        return response()->json($vinyls);
-    }
+        $vinyls = Vinyl::with(['format', 'recordCompany', 'bands', 'songs.genre', 'songs.band'])->get();
 
-    public function show($id){
-        $vinyl = Vinyl::find($id);
-        if (!$vinyl) {
-            return response()->json(['message' => 'Vinyl not found'], 404);
-        }
-        return response()->json($vinyl);
+        $data = [
+            'message' => 'Vinyls retrieved successfully',
+            'vinyls' => $vinyls
+        ];
+        return response()->json($data);
     }
 
     public function store(Request $request){
-        $vinyl = new Vinyl();
-        $vinyl->fill($request->all());
-        $vinyl->save();
-        return response()->json($vinyl, 201);
+        $request->validate([
+            'name' => 'required|string',
+            'publication_year' => 'required|integer',
+            'edition_year' => 'nullable|integer',
+            'format_id' => 'nullable|exists:formats,id',
+            'record_company_id' => 'nullable|exists:record_companies,id',
+            'cover_url' => 'nullable|string',
+        ]);
+
+        $vinyl = Vinyl::create($request->all());
+        $data = [
+            'message' => 'Vinyl created successfully',
+            'vinyl' => $vinyl
+        ];
+        return response()->json($data);
+    }
+
+    public function show($id){
+        $vinyl = Vinyl::with('format', 'recordCompany', 'bands', 'songs.genre', 'songs.band')->find($id);
+        if (!$vinyl) {
+            $data = [
+                'message' => 'Vinyl not found',
+                'vinyl' => null
+            ];
+            return response()->json($data, 404);
+        }
+
+        $data = [
+            'message' => 'Vinyl retrieved successfully',
+            'vinyl' => $vinyl
+        ];
+        return response()->json($data);
     }
 
     public function update(Request $request, $id){
         $vinyl = Vinyl::find($id);
         if (!$vinyl) {
-            return response()->json(['message' => 'Vinyl not found'], 404);
+            $data = [
+                'message' => 'Vinyl not found',
+                'vinyl' => null
+            ];
+
+            return response()->json($data);
         }
-        $vinyl->fill($request->all());
-        $vinyl->save();
-        return response()->json($vinyl);
+
+        $request->validate([
+            'name' => 'required|string',
+            'publication_year' => 'required|integer',
+            'edition_year' => 'nullable|integer',
+            'format_id' => 'nullable|exists:formats,id',
+            'record_company_id' => 'nullable|exists:record_companies,id',
+            'cover_url' => 'nullable|string',
+        ]);
+
+        $vinyl->update($request->all());
+        $data = [
+            'message' => 'Vinyl updated successfully',
+            'vinyl' => $vinyl
+        ];
+        return response()->json($data);
     }
 
     public function destroy($id){
         $vinyl = Vinyl::find($id);
+
         if (!$vinyl) {
-            return response()->json(['message' => 'Vinyl not found'], 404);
+            $data = [
+                'message' => 'Vinyl not found',
+                'vinyl' => null
+            ];
+            return response()->json($data, 404);
         }
+
         $vinyl->delete();
-        return response()->json(['message' => 'Vinyl deleted']);
-    }
-
-    public function collectionsByVinyls(){
-        $vinyls = Vinyl::with('collections')->get();
-        return response()->json($vinyls);
-    }
-
-    public function collectionsByVinyl($id){
-        $vinyl = Vinyl::with('collections')->findOrFail($id);
-        return response()->json($vinyl);
-    }
-
-    public function indexWithDetails(){
-        $vinyls = Vinyl::with('collections', 'bands', 'songs', 'format', 'recordCompany')->get();
-        return response()->json($vinyls);
-    }
-
-    public function showWithDetails($id){
-        $vinyl = Vinyl::with('collections', 'bands', 'songs', 'format', 'recordCompany')->findOrFail($id);
-        return response()->json($vinyl);
+        $data = [
+            'message' => 'Vinyl deleted successfully',
+            'vinyl' => $vinyl
+        ];
+        return response()->json($data);
     }
 }
+
 

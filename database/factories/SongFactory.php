@@ -15,7 +15,7 @@ class SongFactory extends Factory{
             'video_url' => $this->faker->optional()->url(),
             'audio_url' => $this->faker->optional()->url(),
             'genre_id' => $this->faker->numberBetween(1, 48),
-            'band_id' => $this->faker->numberBetween(2, 11),
+            'band_id' => $this->faker->numberBetween(2, 50),
             'duration' => $this->faker->numberBetween(60, 300)
         ];
     }

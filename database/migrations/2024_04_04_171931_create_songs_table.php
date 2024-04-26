@@ -17,7 +17,6 @@ return new class extends Migration{
             $table->timestamps();
 
             $table->unsignedBigInteger('genre_id')->nullable();
-
             $table->foreign('genre_id')
             ->references('id')
             ->on('genres')

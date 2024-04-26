@@ -13,8 +13,12 @@ class Collection extends Model{
         'description',
         'number_vinyls',
         'rating',
-        'user_id',
         'public',
+        'user_id',
+    ];
+
+    protected $hidden = [
+        'user_id',
     ];
 
     //Usuario al que pertenece la coleccion (relación 1:1).

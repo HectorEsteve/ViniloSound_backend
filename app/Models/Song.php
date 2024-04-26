@@ -13,7 +13,14 @@ class Song extends Model{
         'duration',
         'lyrics',
         'video_url',
-        'audio_url'
+        'audio_url',
+        'genre_id',
+        'band_id'
+    ];
+
+    protected $hidden = [
+        'genre_id',
+        'band_id',
     ];
 
     //Recupera los vinilos con esa cancion (relación m:n).
@@ -30,6 +37,4 @@ class Song extends Model{
     public function band(){
         return $this->belongsTo(Band::class);
     }
-
-
 }

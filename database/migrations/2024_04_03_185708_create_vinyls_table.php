@@ -12,7 +12,7 @@ return new class extends Migration{
             $table->string('name');
             $table->string('cover_url')->nullable();
             $table->integer('publication_year');
-            $table->integer('edition_year');
+            $table->integer('edition_year')->nullable();
             $table->timestamps();
 
             $table->unsignedBigInteger('format_id')

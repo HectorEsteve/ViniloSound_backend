@@ -15,6 +15,6 @@ class Rol extends Model{
 
     // Obtiene los usuarios asociados a un rol (relación m:n).
     public function users(){
-        return $this->belongsToMany(User::class, 'rol_user', 'rol_id', 'user_id');
+        return $this->belongsToMany(User::class);
     }
 }

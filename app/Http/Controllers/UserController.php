@@ -1,46 +1,102 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
 
-class UserController extends Controller
-{
+class UserController extends Controller{
     public function index(){
-        $users = User::all();
-        return response()->json($users);
+        $users = User::with('roles', 'collection')->get();
+        $data = [
+            'message' => 'Users retrieved successfully',
+            'users' => $users
+        ];
+        return response()->json($data);
     }
 
     public function show($id){
-        $user = User::findOrFail($id);
-        return response()->json($user);
+        $user = User::with('roles', 'collection')->find($id);
+        if (!$user) {
+            $data = [
+                'message' => 'User not found',
+                'user' => null
+            ];
+            return response()->json($data);
+        }
+
+        $data = [
+            'message' => 'User retrieved successfully',
+            'user' => $user
+        ];
+        return response()->json($data);
     }
 
     public function store(Request $request){
-        $user = User::create($request->all());
-        return response()->json($user, 201);
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string',
+            'points' => 'integer|min:0',
+        ]);
+
+        $encryptedPassword = bcrypt($request->password);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $encryptedPassword,
+            'points' => $request->points ?? 0,
+        ]);
+
+        $user->roles()->attach(1);
+
+        $data = [
+            'message' => 'User created successfully',
+            'user' => $user
+        ];
+        return response()->json($data);
     }
 
     public function update(Request $request, $id){
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+        if (!$user) {
+            $data = [
+                'message' => 'User not found',
+                'user' => null
+            ];
+            return response()->json($data);
+        }
+
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'required|string',
+            'points' => 'integer|min:0',
+        ]);
+
         $user->update($request->all());
-        return response()->json($user, 200);
+        $data = [
+            'message' => 'User updated successfully',
+            'user' => $user
+        ];
+        return response()->json($data);
     }
 
     public function destroy($id){
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+        if (!$user) {
+            $data = [
+                'message' => 'User not found',
+                'user' => null
+            ];
+            return response()->json($data);
+        }
+
         $user->delete();
-        return response()->json(null, 204);
-    }
-
-    public function indexWithDetails(){
-        $users = User::with('roles', 'collection')->get();
-        return response()->json($users);
-    }
-
-    public function showWithDetails($id){
-        $user = User::with('roles', 'collection')->findOrFail($id);
-        return $user;
+        $data = [
+            'message' => 'User deleted successfully',
+            'user' => $user
+        ];
+        return response()->json($data);
     }
 }

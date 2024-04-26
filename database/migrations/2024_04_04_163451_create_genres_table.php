@@ -9,7 +9,7 @@ return new class extends Migration{
     public function up(): void{
         Schema::create('genres', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('history')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();

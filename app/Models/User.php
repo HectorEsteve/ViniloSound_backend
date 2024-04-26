@@ -23,7 +23,7 @@ class User extends Authenticatable{
 
     //Obtiene los roles asociados a un usuaio (relación m:n).
     public function roles(){
-        return $this->belongsToMany(Rol::class, 'rol_user', 'user_id', 'rol_id');
+        return $this->belongsToMany(Rol::class);
     }
 
     //coleccion asociada al usuario (relación 1:1).

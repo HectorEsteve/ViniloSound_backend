@@ -1,57 +1,97 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Collection;
 
-class CollectionController extends Controller{
-    public function index(){
-        $collections = Collection::all();
-        return response()->json($collections);
+class CollectionController extends Controller {
+    public function index() {
+        $collections = Collection::with(['user', 'vinyls.format', 'vinyls.recordCompany', 'vinyls.bands', 'vinyls.songs.genre', 'vinyls.songs.band'])->get();
+        $data = [
+            'message' => 'Collections retrieved successfully',
+            'collections' => $collections
+        ];
+        return response()->json($data);
     }
 
-    public function show($id){
-        $collection = Collection::find($id);
+    public function show($id) {
+        $collection = Collection::with(['user', 'vinyls.format', 'vinyls.recordCompany', 'vinyls.bands', 'vinyls.songs.genre', 'vinyls.songs.band'])->find($id);
         if (!$collection) {
-            return response()->json(['message' => 'Collection not found'], 404);
+            $data = [
+                'message' => 'Collection not found',
+                'collection' => null
+            ];
+            return response()->json($data);
         }
-        return response()->json($collection);
+
+        $data = [
+            'message' => 'Collection retrieved successfully',
+            'collection' => $collection
+        ];
+        return response()->json($data);
     }
 
     public function store(Request $request) {
-        $collection = new Collection();
-        $collection->fill($request->all());
-        $collection->save();
-        return response()->json($collection, 201);
+        $request->validate([
+            'name' => 'required',
+            'description' => 'nullable',
+            'number_vinyls' => 'integer|min:0',
+            'rating' => 'integer|min:0',
+            'public' => 'boolean',
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        $collection = Collection::create($request->all());
+        $data = [
+            'message' => 'Collection created successfully',
+            'collection' => $collection
+        ];
+        return response()->json($data);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id) {
         $collection = Collection::find($id);
         if (!$collection) {
-            return response()->json(['message' => 'Collection not found'], 404);
+            $data = [
+                'message' => 'Collection not found',
+                'collection' => null
+            ];
+            return response()->json($data);
         }
-        $collection->fill($request->all());
-        $collection->save();
-        return response()->json($collection);
+
+        $request->validate([
+            'name' => 'required',
+            'description' => 'nullable',
+            'number_vinyls' => 'integer|min:0',
+            'rating' => 'integer|min:0',
+            'public' => 'boolean',
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        $collection->update($request->all());
+        $data = [
+            'message' => 'Collection updated successfully',
+            'collection' => $collection
+        ];
+        return response()->json($data);
     }
 
-    public function destroy($id){
+    public function destroy($id) {
         $collection = Collection::find($id);
         if (!$collection) {
-            return response()->json(['message' => 'Collection not found'], 404);
+            $data = [
+                'message' => 'Collection not found',
+                'collection' => null
+            ];
+            return response()->json($data);
         }
+
         $collection->delete();
-        return response()->json(['message' => 'Collection deleted']);
-    }
-
-    public function indexWithDetails(){
-        $collections = Collection::with('user', 'vinyls')->get();
-        return response()->json($collections);
-    }
-
-    public function showWithDetails($id){
-        $collection = Collection::with('user', 'vinyls')->findOrFail($id);
-        return response()->json($collection);
+        $data = [
+            'message' => 'Collection deleted successfully',
+            'collection' => $collection
+        ];
+        return response()->json($data);
     }
 }
+

@@ -9,10 +9,10 @@ return new class extends Migration{
     public function up(): void{
         Schema::create('bands', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->integer('members_count');
-            $table->text('members');
-            $table->integer('formation_year');
+            $table->text('members')->nullable();
+            $table->string('formation_year', 4);
             $table->string('country');
             $table->timestamps();
         });

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -8,50 +7,86 @@ use App\Models\Format;
 class FormatController extends Controller{
     public function index(){
         $formats = Format::all();
-        return response()->json($formats);
+        $data = [
+            'message' => 'Formats retrieved successfully',
+            'formats' => $formats
+        ];
+        return response()->json($data);
+    }
+
+    public function store(Request $request) {
+        $request->validate([
+            'name' => 'required|unique:formats',
+            'diameter' => 'required|integer|min:1',
+            'rpm' => 'required',
+            'duration_side' => 'required|integer|min:1',
+        ]);
+
+        $format = Format::create($request->all());
+        $data = [
+            'message' => 'Format created successfully',
+            'format' => $format
+        ];
+        return response()->json($data);
     }
 
     public function show($id){
         $format = Format::find($id);
         if (!$format) {
-            return response()->json(['message' => 'Format not found'], 404);
+            $data = [
+                'message' => 'Format not found',
+                'format' => null
+            ];
+            return response()->json($data);
         }
-        return response()->json($format);
-    }
 
-    public function store(Request $request){
-        $format = new Format();
-        $format->fill($request->all());
-        $format->save();
-        return response()->json($format, 201);
+        $data = [
+            'message' => 'Format retrieved successfully',
+            'format' => $format
+        ];
+        return response()->json($data);
     }
 
     public function update(Request $request, $id){
         $format = Format::find($id);
         if (!$format) {
-            return response()->json(['message' => 'Format not found'], 404);
+            $data = [
+                'message' => 'Format not found',
+                'format' => null
+            ];
+            return response()->json($data);
         }
-        $format->fill($request->all());
-        $format->save();
-        return response()->json($format);
+
+        $request->validate([
+            'name' => 'required|unique:formats,name,'.$id,
+            'diameter' => 'required|integer|min:1',
+            'rpm' => 'required',
+            'duration_side' => 'required|integer|min:1',
+        ]);
+
+        $format->update($request->all());
+        $data = [
+            'message' => 'Format updated successfully',
+            'format' => $format
+        ];
+        return response()->json($data);
     }
 
     public function destroy($id){
         $format = Format::find($id);
         if (!$format) {
-            return response()->json(['message' => 'Format not found'], 404);
+            $data = [
+                'message' => 'Format not found',
+                'format' => null
+            ];
+            return response()->json($data);
         }
+
         $format->delete();
-        return response()->json(['message' => 'Format deleted']);
-    }
-
-    public function vinylsByFormats(){
-        $formats = Format::with('vinyls')->get();
-        return response()->json($formats);
-    }
-
-    public function vinylsByFormat($id){
-        $format = Format::with('vinyls')->findOrFail($id);
-        return response()->json($format);
+        $data = [
+            'message' => 'Format deleted successfully',
+            'format' => $format
+        ];
+        return response()->json($data);
     }
 }
