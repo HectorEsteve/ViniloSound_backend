@@ -24,7 +24,7 @@ class RolController extends Controller{
             'message' => 'Rol created successfully',
             'rol' => $rol
         ];
-        return response()->json($data, 201);
+        return response()->json($data);
     }
 
     public function show($id){

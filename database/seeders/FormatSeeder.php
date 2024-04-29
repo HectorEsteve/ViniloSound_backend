@@ -26,14 +26,14 @@ class FormatSeeder extends Seeder
         $formato2->save();
 
         $formato3 = new Format();
-        $formato3->name = "Extended Play 10'(EP10') / LP";
+        $formato3->name = "Extended Play 10'(EP10'), LP 45 rpm";
         $formato3->diameter = 10;
         $formato3->rpm = "45";
         $formato3->duration_side = 20;
         $formato3->save();
 
         $formato4 = new Format();
-        $formato4->name = "Extended Play 10'(EP10') / LP";
+        $formato4->name = "Extended Play 10'(EP10'), LP 33 1/2 rpm";
         $formato4->diameter = 10;
         $formato4->rpm = "33 1/2";
         $formato4->duration_side = 15;
@@ -47,14 +47,14 @@ class FormatSeeder extends Seeder
         $formato5->save();
 
         $formato6 = new Format();
-        $formato6->name = "Extended Play 7' (EP7')";
+        $formato6->name = "Extended Play 7' (EP7'), 30 1/2 rpm";
         $formato6->diameter = 7;
         $formato6->rpm = "30 1/2";
         $formato6->duration_side = 7;
         $formato6->save();
 
         $formato7 = new Format();
-        $formato7->name = "Extended Play 7' (EP7')";
+        $formato7->name = "Extended Play 7' (EP7'), 45 rpm ";
         $formato7->diameter = 7;
         $formato7->rpm = "45";
         $formato7->duration_side = 5;
