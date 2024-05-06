@@ -35,7 +35,7 @@ class UserController extends Controller{
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string',
+            'password' => 'required|string|min:4',
             'points' => 'integer|min:0',
         ]);
 

@@ -11,7 +11,7 @@ return new class extends Migration{
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
+            $table->string('password')->min(4);
             $table->boolean('connected')->default(false);
             $table->integer('points')->default(0);
             $table->rememberToken();
