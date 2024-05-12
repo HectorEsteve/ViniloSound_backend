@@ -12,7 +12,7 @@ return new class extends Migration{
             $table->string('name')->unique();
             $table->integer('members_count');
             $table->text('members')->nullable();
-            $table->string('formation_year', 4);
+            $table->integer('formation_year');
             $table->string('country');
             $table->timestamps();
         });
