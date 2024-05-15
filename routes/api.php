@@ -11,6 +11,8 @@ use App\Http\Controllers\BandController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\VinylController;
+use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
