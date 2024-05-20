@@ -70,7 +70,7 @@ class AuthController extends Controller{
             return response()->json(false);
         }
 
-        $isAdmin = $user->roles->contains('id', 4);
+        $isAdmin = $user->roles->contains('id', 5);
         return response()->json($isAdmin);
     }
 
