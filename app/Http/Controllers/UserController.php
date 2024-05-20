@@ -71,14 +71,23 @@ class UserController extends Controller{
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'required|string',
-            'points' => 'integer|min:0',
         ]);
 
-        $user->update($request->all());
+        $input = $request->all();
+
+        if (!empty($input['password'])) {
+            $input['password'] = bcrypt($input['password']);
+        } else {
+            unset($input['password']);
+        }
+
+        $user->update($input);
+
         $data = [
             'message' => 'User updated successfully',
             'user' => $user
         ];
+
         return response()->json($data);
     }
 
@@ -91,7 +100,6 @@ class UserController extends Controller{
             ];
             return response()->json($data);
         }
-
         $user->delete();
         $data = [
             'message' => 'User deleted successfully',

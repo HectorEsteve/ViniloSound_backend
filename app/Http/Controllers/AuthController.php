@@ -30,4 +30,38 @@ class AuthController extends Controller{
             return response()->json($data);
         }
     }
+
+    public function verifyCredentials(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return response()->json(true);
+        } else {
+            return response()->json(false);
+        }
+    }
+
+    public function verifyEmail(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+        $user = User::where('email', $request->email)->first();
+        return response()->json(!is_null($user));
+    }
+
+    public function checkIfAdmin($userId){
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(false);
+        }
+
+        $isAdmin = $user->roles->contains('id', 4);
+        return response()->json($isAdmin);
+    }
+
+
 }

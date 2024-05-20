@@ -97,4 +97,21 @@ class BandController extends Controller{
         ];
         return response()->json($data);
     }
+
+    public function getRandomBands(Request $request){
+        $request->validate([
+            'limit' => 'required|integer|min:1|max:100',
+        ]);
+        $limit = $request->query('limit');
+
+        $bands = Band::with(['songs' => function ($query) {
+            $query->with('genre');
+        }])->inRandomOrder()->limit($limit)->get();
+
+        $data = [
+            'message' => $bands->isEmpty() ? 'No bands found' : 'Bands retrieved successfully',
+            'bands' => $bands->isEmpty() ? [] : $bands
+        ];
+        return response()->json($data);
+    }
 }

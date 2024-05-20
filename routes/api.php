@@ -30,7 +30,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-Route::post('/login', [AuthController::class, 'login']);
+Route::prefix('/')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/check-auth', [AuthController::class, 'verifyCredentials']);
+    Route::post('/check-email', [AuthController::class, 'verifyEmail']);
+    Route::get('/check-admin/{id}', [AuthController::class, 'checkIfAdmin']);
+});
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
@@ -38,7 +43,6 @@ Route::prefix('users')->group(function () {
     Route::post('/', [UserController::class, 'store']);
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'destroy']);
-
 });
 
 Route::prefix('formats')->group(function () {
@@ -75,6 +79,7 @@ Route::prefix('genres')->group(function () {
 
 Route::prefix('songs')->group(function () {
     Route::get('/', [SongController::class, 'index']);
+    Route::get('/random', [SongController::class, 'getRandomSongs']);
     Route::get('/{id}', [SongController::class, 'show']);
     Route::post('/', [SongController::class, 'store']);
     Route::put('/{id}', [SongController::class, 'update']);
@@ -83,6 +88,7 @@ Route::prefix('songs')->group(function () {
 
 Route::prefix('bands')->group(function () {
     Route::get('/', [BandController::class, 'index']);
+    Route::get('/random', [BandController::class, 'getRandomBands']);
     Route::get('/{id}', [BandController::class, 'show']);
     Route::post('/', [BandController::class, 'store']);
     Route::put('/{id}', [BandController::class, 'update']);
@@ -91,6 +97,7 @@ Route::prefix('bands')->group(function () {
 
 Route::prefix('collections')->group(function () {
     Route::get('/', [CollectionController::class, 'index']);
+    Route::get('/random', [CollectionController::class, 'getRandomCollections']);
     Route::get('/{id}', [CollectionController::class, 'show']);
     Route::post('/', [CollectionController::class, 'store']);
     Route::put('/{id}', [CollectionController::class, 'update']);
@@ -99,6 +106,7 @@ Route::prefix('collections')->group(function () {
 
 Route::prefix('vinyls')->group(function () {
     Route::get('/', [VinylController::class, 'index']);
+    Route::get('/random', [VinylController::class, 'getRandomVinyls']);
     Route::get('/{id}', [VinylController::class, 'show']);
     Route::post('/', [VinylController::class, 'store']);
     Route::put('/{id}', [VinylController::class, 'update']);
