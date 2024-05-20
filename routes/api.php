@@ -35,6 +35,7 @@ Route::prefix('/')->group(function () {
     Route::post('/check-auth', [AuthController::class, 'verifyCredentials']);
     Route::post('/check-email', [AuthController::class, 'verifyEmail']);
     Route::get('/check-admin/{id}', [AuthController::class, 'checkIfAdmin']);
+    Route::get('/check-root/{id}', [AuthController::class, 'checkIfRoot']);
 });
 
 Route::prefix('users')->group(function () {
