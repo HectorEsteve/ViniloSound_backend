@@ -93,5 +93,22 @@ class CollectionController extends Controller {
         ];
         return response()->json($data);
     }
+
+    public function getRandomCollections(Request $request){
+        $request->validate([
+            'limit' => 'required|integer|min:1|max:100',
+        ]);
+        $limit = $request->query('limit');
+        $collections = Collection::with(['user', 'vinyls.format', 'vinyls.recordCompany', 'vinyls.bands', 'vinyls.songs.genre', 'vinyls.songs.band'])
+                        ->inRandomOrder()
+                        ->limit($limit)
+                        ->get();
+
+        $data = [
+            'message' => $collections->isEmpty() ? 'No collections found' : 'Collections retrieved successfully',
+            'collections' => $collections->isEmpty() ? [] : $collections
+        ];
+        return response()->json($data);
+    }
 }
 

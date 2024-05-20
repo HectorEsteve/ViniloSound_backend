@@ -90,4 +90,25 @@ class SongController extends Controller{
 
         return response()->json($data);
     }
+
+    public function getRandomSongs(Request $request){
+        $request->validate([
+            'limit' => 'required|integer|min:1|max:100',
+        ]);
+        $limit = $request->query('limit');
+        $songs = Song::with('genre', 'band')->inRandomOrder()->limit($limit)->get();
+        if ($songs->isEmpty()) {
+            $data = [
+                'message' => 'No songs found',
+                'songs' => []
+            ];
+        } else {
+            $data = [
+                'message' => 'Songs retrieved successfully',
+                'songs' => $songs
+            ];
+        }
+        return response()->json($data);
+    }
+
 }

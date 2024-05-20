@@ -97,6 +97,23 @@ class VinylController extends Controller{
         ];
         return response()->json($data);
     }
+
+    public function getRandomVinyls(Request $request){
+        $request->validate([
+            'limit' => 'required|integer|min:1|max:100',
+        ]);
+        $limit = $request->query('limit');
+
+        $vinyls = Vinyl::with(['format', 'recordCompany', 'bands', 'songs.genre', 'songs.band'])
+                        ->inRandomOrder()
+                        ->limit($limit)
+                        ->get();
+        $data = [
+            'message' => $vinyls->isEmpty() ? 'No vinyls found' : 'Vinyls retrieved successfully',
+            'vinyls' => $vinyls->isEmpty() ? [] : $vinyls
+        ];
+        return response()->json($data);
+    }
 }
 
 
