@@ -17,9 +17,12 @@ class AuthController extends Controller{
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
+
+            $user->collection;
+
             $data = [
                 'message' => 'User authenticated successfully',
-                'user' => $user
+                'user' => $user,
             ];
             return response()->json($data);
         } else {

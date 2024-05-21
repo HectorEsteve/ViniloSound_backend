@@ -81,6 +81,8 @@ class UserController extends Controller{
             unset($input['password']);
         }
 
+        $user->collection;
+
         $user->update($input);
 
         $data = [
