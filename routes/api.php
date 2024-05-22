@@ -99,6 +99,8 @@ Route::prefix('bands')->group(function () {
 Route::prefix('collections')->group(function () {
     Route::get('/', [CollectionController::class, 'index']);
     Route::get('/random', [CollectionController::class, 'getRandomCollections']);
+    Route::post('/{id}/add-vinyl', [CollectionController::class, 'addVinyl']);
+    Route::post('/{id}/remove-vinyl', [CollectionController::class, 'removeVinyl']);
     Route::get('/{id}', [CollectionController::class, 'show']);
     Route::post('/', [CollectionController::class, 'store']);
     Route::put('/{id}', [CollectionController::class, 'update']);

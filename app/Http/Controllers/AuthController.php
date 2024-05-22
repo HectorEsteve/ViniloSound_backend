@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 
 class AuthController extends Controller{
-    public function login(Request $request){
+    public function login(Request $request) {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -18,7 +18,9 @@ class AuthController extends Controller{
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
 
-            $user->collection;
+            if ($user->collection) {
+                $user->collection->vinyls;
+            }
 
             $data = [
                 'message' => 'User authenticated successfully',

@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Collection;
+use App\Models\Vinyl;
+
 
 class CollectionController extends Controller {
     public function index() {
@@ -42,6 +44,8 @@ class CollectionController extends Controller {
         ]);
 
         $collection = Collection::create($request->all());
+        $collection->load('vinyls');  // Cargar la relación vinyls
+
         $data = [
             'message' => 'Collection created successfully',
             'collection' => $collection
@@ -49,7 +53,7 @@ class CollectionController extends Controller {
         return response()->json($data);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id){
         $collection = Collection::find($id);
         if (!$collection) {
             $data = [
@@ -69,6 +73,8 @@ class CollectionController extends Controller {
         ]);
 
         $collection->update($request->all());
+        $collection->load('vinyls');
+
         $data = [
             'message' => 'Collection updated successfully',
             'collection' => $collection
@@ -107,6 +113,68 @@ class CollectionController extends Controller {
         $data = [
             'message' => $collections->isEmpty() ? 'No collections found' : 'Collections retrieved successfully',
             'collections' => $collections->isEmpty() ? [] : $collections
+        ];
+        return response()->json($data);
+    }
+
+    public function addVinyl(Request $request, $collectionId){
+        $request->validate([
+            'vinyl_id' => 'required|exists:vinyls,id',
+        ]);
+
+        $collection = Collection::find($collectionId);
+
+        if (!$collection) {
+            $data = [
+                'message' => 'Collection not found',
+                'collection' => null
+            ];
+            return response()->json($data);
+        }
+
+        $vinyl = Vinyl::find($request->vinyl_id);
+        $collection->vinyls()->attach($vinyl);
+
+        $collection->number_vinyls += 1;
+        $collection->save();
+
+        $collection->load('vinyls');
+
+        $data = [
+            'message' => 'Vinyl added to collection successfully',
+            'collection' => $collection,
+        ];
+        return response()->json($data);
+    }
+
+    public function removeVinyl(Request $request, $collectionId){
+        $request->validate([
+            'vinyl_id' => 'required|exists:vinyls,id',
+        ]);
+
+        $collection = Collection::find($collectionId);
+
+        if (!$collection) {
+            $data = [
+                'message' => 'Collection not found',
+                'collection' => null
+            ];
+            return response()->json($data);
+        }
+
+        $vinyl = Vinyl::find($request->vinyl_id);
+        $collection->vinyls()->detach($vinyl);
+
+        if ($collection->number_vinyls > 0) {
+            $collection->number_vinyls -= 1;
+            $collection->save();
+        }
+
+        $collection->load('vinyls');
+
+        $data = [
+            'message' => 'Vinyl removed from collection successfully',
+            'collection' => $collection,
         ];
         return response()->json($data);
     }

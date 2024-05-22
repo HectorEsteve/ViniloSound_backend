@@ -81,9 +81,11 @@ class UserController extends Controller{
             unset($input['password']);
         }
 
-        $user->collection;
-
         $user->update($input);
+
+        if ($user->collection) {
+            $user->collection->vinyls;
+        }
 
         $data = [
             'message' => 'User updated successfully',
