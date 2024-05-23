@@ -35,9 +35,7 @@ class BandController extends Controller{
     }
 
     public function show($id) {
-        $band = Band::with(['songs' => function ($query) {
-            $query->with('genre');
-        }])->find($id);
+        $band = Band::with(['songs.genre', 'songs.band'])->find($id);
 
         if (!$band) {
             $data = [
