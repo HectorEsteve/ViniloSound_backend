@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\User;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +17,8 @@ class AuthController extends Controller{
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
+
+            User::where('id', $user->id)->update(['connected' => true]);
 
             if ($user->collection) {
                 $user->collection->vinyls;
@@ -34,6 +36,17 @@ class AuthController extends Controller{
             ];
             return response()->json($data);
         }
+    }
+
+    public function logout($userId){
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found']);
+        }
+        $user->update(['connected' => false]);
+
+        return response()->json(['message' => 'User logged out successfully']);
     }
 
     public function verifyCredentials(Request $request){

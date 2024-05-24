@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Rol;
 
 class UserController extends Controller{
     public function index(){
@@ -110,5 +111,26 @@ class UserController extends Controller{
             'user' => $user
         ];
         return response()->json($data);
+    }
+
+    public function ascendToAdmin($id){
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado']);
+        }
+
+        $adminRole = Rol::where('id', 4)->first();
+        if (!$adminRole) {
+            return response()->json(['message' => 'Rol de administrador no encontrado']);
+        }
+
+        $user->roles()->attach($adminRole);
+        return response()->json(['message' => 'Usuario ascendido a administrador', 'user' => $user]);
+    }
+
+    public function degradeToUser($id){
+        $user = User::findOrFail($id);
+        $user->roles()->detach(4);
+        return response()->json(['message' => 'Usuario degradado a usuario']);
     }
 }

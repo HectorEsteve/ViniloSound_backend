@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 */
 Route::prefix('/')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout/{id}', [AuthController::class, 'logout']);
     Route::post('/check-auth', [AuthController::class, 'verifyCredentials']);
     Route::post('/check-email', [AuthController::class, 'verifyEmail']);
     Route::get('/check-admin/{id}', [AuthController::class, 'checkIfAdmin']);
@@ -41,7 +42,9 @@ Route::prefix('/')->group(function () {
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('/{id}', [UserController::class, 'show']);
+    Route::post('/{id}/ascend-to-admin', [UserController::class, 'ascendToAdmin']);
     Route::post('/', [UserController::class, 'store']);
+    Route::put('/{id}/degrade-to-user', [UserController::class, 'degradeToUser']);
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });

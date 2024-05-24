@@ -6,9 +6,7 @@ use Illuminate\Http\Request;
 
 class BandController extends Controller{
     public function index(){
-        $bands = Band::with(['songs' => function ($query) {
-            $query->with('genre');
-        }])->get();
+        $bands = Band::with(['songs.genre', 'songs.band'])->get();
 
         $data = [
             'message' => 'Bands retrieved successfully',
@@ -102,9 +100,7 @@ class BandController extends Controller{
         ]);
         $limit = $request->query('limit');
 
-        $bands = Band::with(['songs' => function ($query) {
-            $query->with('genre');
-        }])->inRandomOrder()->limit($limit)->get();
+        $bands = Band::with(['songs.genre', 'songs.band'])->inRandomOrder()->limit($limit)->get();
 
         $data = [
             'message' => $bands->isEmpty() ? 'No bands found' : 'Bands retrieved successfully',
