@@ -71,6 +71,7 @@ class SongController extends Controller{
         ]);
 
         $song->update($request->all());
+        $song = Song::with('genre', 'band')->find($id);
         $data = [
             'message' => 'Song updated successfully',
             'song' => $song

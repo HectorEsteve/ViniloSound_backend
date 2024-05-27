@@ -19,7 +19,7 @@ class BandController extends Controller{
         $request->validate([
             'name' => 'required|unique:bands',
             'members_count' => 'required|integer|min:1',
-            'members' => 'nullable',
+            'members' => 'nullable|string',
             'formation_year' => 'required|digits:4',
             'country' => 'required|max:255',
         ]);
@@ -63,7 +63,7 @@ class BandController extends Controller{
         $request->validate([
             'name' => 'required|unique:bands,name,'.$id,
             'members_count' => 'required|integer|min:1',
-            'members' => 'nullable|array',
+            'members' => 'nullable|string',
             'formation_year' => 'required|digits:4',
             'country' => 'required|max:255',
         ]);
