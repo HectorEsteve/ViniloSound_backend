@@ -24,9 +24,22 @@ class VinylController extends Controller{
             'format_id' => 'nullable|exists:formats,id',
             'record_company_id' => 'nullable|exists:record_companies,id',
             'cover_url' => 'nullable|string',
+            'song_ids' => 'nullable|array', // Validación para los IDs de las canciones
+            'band_ids' => 'nullable|array', // Validación para los IDs de los grupos
         ]);
 
-        $vinyl = Vinyl::create($request->all());
+        $vinyl = Vinyl::create($request->except('song_ids', 'band_ids'));
+
+        // Asociar canciones al vinilo
+        if ($request->has('song_ids')) {
+            $vinyl->songs()->attach($request->input('song_ids'));
+        }
+
+        // Asociar grupos al vinilo
+        if ($request->has('band_ids')) {
+            $vinyl->bands()->attach($request->input('band_ids'));
+        }
+
         $data = [
             'message' => 'Vinyl created successfully',
             'vinyl' => $vinyl
@@ -72,6 +85,7 @@ class VinylController extends Controller{
         ]);
 
         $vinyl->update($request->all());
+        $vinyl = Vinyl::with('format', 'recordCompany', 'bands', 'songs.genre', 'songs.band')->find($id);
         $data = [
             'message' => 'Vinyl updated successfully',
             'vinyl' => $vinyl
