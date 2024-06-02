@@ -44,8 +44,12 @@ RUN a2ensite laravel.conf
 # Deshabilita el sitio por defecto de Apache
 RUN a2dissite 000-default.conf
 
-# Asigna permisos de escritura a los directorios necesarios
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Asigna permisos de escritura a los directorios necesarios y arrancamos todo
+RUN chmod -R 777 www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN composer install
+RUN npm install
+RUN php artisan key:generate
+RUN php artisan migrate:fresh --seed
 
 # Exponer el puerto 80
 EXPOSE 80
