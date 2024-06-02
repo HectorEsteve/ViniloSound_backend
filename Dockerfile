@@ -25,6 +25,10 @@ RUN docker-php-ext-install pdo pdo_mysql gd
 # Instala Composer desde imagen oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Instalar Node.js y npm
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+
 # Copia el contenido de la aplicación al contenedor
 COPY . .
 
