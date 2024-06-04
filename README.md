@@ -53,3 +53,15 @@ Por último, tendremos que hacer las migraciones para que se cree la base de dat
 ```sh
 docker exec -it laravel_app php artisan migrate:fresh --seed
 ```
+
+## Acceso como admin
+
+User: `admin@gmail.com`
+
+password: `admin`
+
+## Acceso como root
+
+User: `root@gmail.com`
+
+password: `root`
