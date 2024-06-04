@@ -42,6 +42,12 @@ docker-compose build
 docker-compose up -d
 ```
 
+Ahora nos aseguraremos de que tenemos el composer instaldo
+
+```sh
+docker exec -it laravel_app composer install
+```
+
 Por último, tendremos que hacer las migraciones para que se cree la base de datos:
 
 ```sh
